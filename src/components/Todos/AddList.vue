@@ -24,17 +24,17 @@ export default {
         id: lastId + 1,
         title: this.tText,
         completed: false,
+        filter: true,
       };
       this.tText = "";
-      // this.$set(this.todos, size, add);
-      
+      // this.todos.splice(size,0,add)
       this.todos.push(add);
+      // this.$set(this.todos[size-1], this.todos.id, size-1);
     },
   },
   data() {
     return {
       tText: "",
-      tSize: this.todos.length,
     };
   },
 };

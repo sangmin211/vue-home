@@ -1,17 +1,17 @@
 <template>
   <div>
-    <AddList :todos="getFilterdData" />
+    <!-- <AddList :todos="todos" /> -->
     <div id="serachDone">
-      <input type="text" v-model="searchTitle" />
+      <input type="text" v-model="searchTitle" @change="fnFilterKeywordChange" @keydown="fnFilterKeywordChange" />
     </div>
     <!-- <List :todos="todos" /> -->
-    <List :todos="getFilterdData" />
+    <List v-bind:todos="todos" />
   </div>
 </template>
 
 <script>
 import List from "@/components/Todos/List.vue";
-import AddList from "@/components/Todos/AddList.vue";
+// import AddList from "@/components/Todos/AddList.vue";
 import axios from "axios";
 
 export default {
@@ -20,6 +20,9 @@ export default {
     axios
       .get("https://jsonplaceholder.typicode.com/todos?_limit=10")
       .then((res) => {
+        // for (const key in res.data) {
+        //   res.data[key].filter = true;
+        // }
         this.todos = res.data;
         // console.log(res.data);
       })
@@ -27,18 +30,68 @@ export default {
         console.log(err);
       });
   },
-  computed: {
-    getFilterdData() {
-      let filteredData = this.todos.filter((todo) => {
-        return todo.title.includes(this.searchTitle);
-      });
-      // console.log(filteredData);
-      return filteredData;
+  methods : {
+      fnFilterKeywordChange () {
+      //this.searchTitle
+      console.log("필터 호출됨");
+      
+
+      // for (var ii in this.todos) {
+      //    if (this.todos[ii].title.includes(this.searchTitle)) {
+      //     this.todos[ii].filter = true;
+      //   }
+      //   console.log(ii);
+      //   break;
+      // }
+
+      console.log("--- 검색어 필터 시작");
+
+      // this.todos.forEach(i => {
+      //   if  (i.title.includes(this.searchTitle)) {
+      //     i.filter = true;
+      //     console.log(i.title, "검색어 포함");
+      //   }
+      //   else {
+      //     i.filter = false;
+      //   }
+      // });
+
+
+      for (var i = 0; i < this.todos.length; i++) {
+        if (this.searchTitle.length < 1) {
+          this.todos[i].filter = true;
+          continue;
+        }
+
+        if  (this.todos[i].title.includes(this.searchTitle)) {
+          this.todos[i].filter = true;
+          
+          console.log(this.todos[i].title, "검색어 포함");
+        }
+        else {
+          this.todos[i].filter = false;
+        }
+      } 
+      this.todos.splice();
     },
+
+  },
+  // computed: {
+  //   getFilterdData() {
+  //     let filteredData = this.todos.filter((l) => {
+  //       return l.title.includes(this.searchTitle);
+  //     });
+  //      console.log(filteredData);
+  //     return filteredData;
+  //   },
+  // },
+
+  computed: {
+  
   },
   components: {
     List,
-    AddList,
+    // AddList,
   },
   data() {
     return {
@@ -46,6 +99,8 @@ export default {
       searchTitle: "",
     };
   },
+
+  
 };
 </script>
 
